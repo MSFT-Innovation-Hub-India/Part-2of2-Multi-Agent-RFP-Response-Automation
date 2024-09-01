@@ -1,0 +1,14 @@
+{
+    "containerApps.deploymentConfigurations": [
+        {
+            "label": "corp-comms-asst",
+            "type": "AcrDockerBuildRequest",
+            "dockerfilePath": "Dockerfile",
+            "srcPath": ".",
+            "envPath": "",
+            "resourceGroup": "corp-comms-asst",
+            "containerApp": "corp-comms-asst",
+            "containerRegistry": "corpcommsasst31442e"
+        }
+    ]
+}
