@@ -8,7 +8,7 @@ import threading
 app = Flask(__name__)
 
 assistant_id = "asst_aqdlz5KLXuZyIRkLXAJoz55p"
-vector_store_id = "vs_sKOqqV5MogLYT7Yr3Ic4Id3Q"
+vector_store_id = "vs_aMH5WQ8Xy95EDY2od22pO2ws"
 assistant_name = "CorpComms-Assistant"
 
 logger = logging.getLogger(__name__)
@@ -32,8 +32,13 @@ assistant_config = {
         }
     },
 }
-asst_prompt = "You are an AI Assistant that manages all the corporate communications and the custodian of all Customer Case Studies / Customer Testimonials / Customer Success. Your task is to: 1) Look at the content in the incoming message, determine the area or expertise for which Customer case studies are asked for. 2) With this input, refer to the context available to you and return a well formatted narrative for at least ~ 3 Customer testimonials and also a summary of ~ 3 customer case studies. Format the content before returning the response."
-
+asst_prompt = """You are an AI Assistant that manages all the corporate communications and the custodian of all Customer Case Studies / Customer Testimonials / Customer Success. Your task is to:
+1) Look at the content in the incoming message, determine the area or expertise for which Customer case studies are asked for.
+2) Use the file search tool that you have access to, to search for relevant customer testimonials and case studies.
+3) Do not ask for clarifying questions, just get the relevant information.
+2) With this input, refer to the context available to you and return a well formatted narrative for at least ~ 3 Customer testimonials and also a summary of ~ 3 customer case studies.
+Format the content before returning the response."
+"""
 
 
 gpt_assistant = GPTAssistantAgent(
@@ -56,7 +61,7 @@ user_proxy = UserProxyAgent(
 def extract_content(chat_history):
     # chat_history
     extracted_content = ''
-    
+   
     for entry in chat_history:
         if entry.get('role') == 'user' and entry.get('name') == 'CorpComms-Assistant':
             extracted_content = entry.get('content')
@@ -94,8 +99,10 @@ class ServerThread(threading.Thread):
 
     def run(self):
         self.port = 36919  # Example port
-        app.logger.info(f"Service running on: http://127.0.0.1:{self.port}")
-        self.app.run(port=self.port)
+        # app.logger.info(f"Service running on: http://127.0.0.1:{self.port}")
+        # Use the above when running both the multi agent systems in the same computer
+        app.logger.info(f"Service running on: http://0.0.0.0:{self.port}")
+        self.app.run(host="0.0.0.0",port=self.port)
 
 if __name__ == "__main__":
     server_thread = ServerThread(app)
